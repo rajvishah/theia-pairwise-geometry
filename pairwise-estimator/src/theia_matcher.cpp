@@ -53,7 +53,6 @@ int main(int argc, char* argv[]) {
   reader::ImageListReader imgList(imgListFile);
   reader::KeyListReader keyList(keyListFile);
   
-
   bool s1 = imgList.read();
   bool s2 = keyList.read();
 
@@ -66,7 +65,6 @@ int main(int argc, char* argv[]) {
   vector< unsigned char* > keys(numKeys);
   vector< keypt_t* > keysInfo(numKeys);
   vector< int > numFeatures(numKeys);
-
   vector<string> view_names(numKeys);
 
   ExifReader exReader;
@@ -83,11 +81,9 @@ int main(int argc, char* argv[]) {
     size_t sep = path.find_last_of("\\/");
     if (sep != std::string::npos)
       path = path.substr(sep + 1, path.size() - sep - 1);
-
     view_names[i] = path; 
     printf("\nImage name is %s", path.c_str());
 
-    NormalizeKeyPoints(numFeatures[i], keysInfo[i], W, H);
     printf("\nReading exif data %d/%d", i, numKeys);
     CameraIntrinsicsPrior cPrior, dummyPrior;
     bool status = exReader.ExtractEXIFMetadata(imgList.getImageName(i), &cPrior);
@@ -103,10 +99,9 @@ int main(int argc, char* argv[]) {
     }
   }
 
-
   FILE* fp = fopen( argv[2] , "r");
   if( fp == NULL ) {
-    printf("\nCould not read match file");
+    printf("\nCould not read matches file");
     return 0;
   }
 
@@ -140,7 +135,6 @@ int main(int argc, char* argv[]) {
       corres.feature1 = f1;
       corres.feature2 = f2;
       featCorrs.push_back(corres);      
-
     }
   
     vector<int> inliers;
@@ -172,6 +166,7 @@ int main(int argc, char* argv[]) {
   
   //Prepare files to run Kyle's 1DSFM Code
   
+  /*
   FILE* file1 = fopen("../output/cc.txt", "w"); 
   if(file1 == NULL) {
     printf("\nCould not open CC file to write");
@@ -201,10 +196,9 @@ int main(int argc, char* argv[]) {
   }
 
   for(int i=0; i < matches.size(); i++) {
-    TwoViewInfo currPairInfo = matches[i].twoview_info;
-    
-      
+    TwoViewInfo currPairInfo = matches[i].twoview_info;   
   }
+  */
 
   return 0;
 }
