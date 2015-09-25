@@ -169,5 +169,42 @@ int main(int argc, char* argv[]) {
   if(!status) {
     printf("\nSuccessfully written view-graph file");
   }
+  
+  //Prepare files to run Kyle's 1DSFM Code
+  
+  FILE* file1 = fopen("../output/cc.txt", "w"); 
+  if(file1 == NULL) {
+    printf("\nCould not open CC file to write");
+    return -1;
+  }
+
+  FILE* file2 = fopen("../output/EGs.txt", "w");
+  if(file2 == NULL) {
+    printf("\nCould not open EG file to write");
+    return -1;
+  }
+
+  FILE* file3 = fopen("../output/coords.txt", "w");
+  if(file2 == NULL) {
+    printf("\nCould not open coords file to write");
+    return -1;
+  }
+  
+  FILE* file4 = fopen("../output/tracks.txt", "w");
+  if(file4 == NULL) {
+    printf("\nCould not open tracks file to write");
+    return -1;
+  }
+
+  for(int i=0; i < numKeys; i++) {
+    fprintf(file1,"%d\n",i);
+  }
+
+  for(int i=0; i < matches.size(); i++) {
+    TwoViewInfo currPairInfo = matches[i].twoview_info;
+    
+      
+  }
+
   return 0;
 }
