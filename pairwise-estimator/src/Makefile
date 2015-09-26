@@ -10,11 +10,19 @@ IFLAGS=-I/usr/local/include/ -I/usr/include/ -I/home/rajvi/PhD/Projects/openMVG-
 LIBS=-ltheia -lANN_char -lz -lglog -leasyexif -lceres
 #LIBS=-ltheia -lANN_char -lz
 
+default: theia_matcher theia_1dsfm_writer
+
 theia_matcher: theia_matcher.o Reader.o keys2a.o
 	$(CC) $(IFLAGS) theia_matcher.o Reader.o keys2a.o $(LIBPATH) -Wall -o theia_matcher $(LIBS)
 
+theia_1dsfm_writer: theia_1dsfm_writer.o Reader.o keys2a.o
+	$(CC) $(IFLAGS) theia_1dsfm_writer.o Reader.o keys2a.o $(LIBPATH) -Wall -o theia_1dsfm_writer $(LIBS)
+
 theia_matcher.o: theia_matcher.cpp
 	$(CC) $(CFLAGS) $(IFLAGS) theia_matcher.cpp 
+
+theia_1dsfm_writer.o: theia_1dsfm_writer.cpp
+	$(CC) $(CFLAGS) $(IFLAGS) theia_1dsfm_writer.cpp 
 
 Reader.o: Reader.cpp Reader.h
 	$(CC) $(CFLAGS) $(IFLAGS) Reader.cpp
