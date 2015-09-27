@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
-  FILE* file4 = fopen("../output/verified_matches.txt", "w");
+  FILE* file4 = fopen("../output/input_tracks.txt", "w");
   if(file4 == NULL) {
     printf("\nCould not open tracks file to write");
     return -1;
@@ -128,12 +128,11 @@ int main(int argc, char* argv[]) {
   int img1, img2;
   vector<ImagePairMatch> matches;
   
-  while(fscanf(fp,"%d %d",&img1,&img2) != EOF){
+  while(fscanf(fp,"%d %d",&img1,&img2) != EOF) {
 
     vector< pair<int,int> > matchIdxPairs;
     vector<FeatureCorrespondence> featCorrs;
     vector<FeatureCorrespondence> inlFeatCorrs;
-    printf("\n%d %d", img1, img2);  
     
     int numMatches;
     fscanf(fp,"%d",&numMatches);
@@ -168,7 +167,7 @@ int main(int argc, char* argv[]) {
         featCorrs,&currPairInfo,&inliers);
 
     for(int in=0; in < inliers.size(); in++) {
-      inlFeatCorrs.push_back(featCorrs[inliers[in]]); 
+      inlFeatCorrs.push_back( featCorrs[inliers[in]] ); 
     }
 
     if(status) {
@@ -181,10 +180,10 @@ int main(int argc, char* argv[]) {
       matches.push_back(imPair);
 
       int numInl = inliers.size();
-      fprintf(file4, "%d\n", inliers.size());
+//      fprintf(file4, "%d\n", inliers.size());
       for(int j=0; j < numInl; j++) {
         pair<int,int> p = matchIdxPairs[inliers[j]];
-        fprintf(file4, "%d %d %d %d\n", img1, p.first, img2, p.second); 
+        fprintf(file4, "2 %d %d %d %d\n", img1, p.first, img2, p.second); 
       }
     }
   }
@@ -203,8 +202,8 @@ int main(int argc, char* argv[]) {
         halfWidth[i], halfHeight[i], focalLengths[i]); 
 
     for(int j=0; j < numFeatures[i]; j++) {
-      fprintf(file3, "i %f %f 0 0 %d %d %d\n",
-          keysInfo[i][j].x, keysInfo[i][j].y,
+      fprintf(file3, "%d %f %f 0 0 %d %d %d\n",
+          j, keysInfo[i][j].x, keysInfo[i][j].y,
           0,0,0); 
     }
   }
@@ -232,7 +231,6 @@ int main(int argc, char* argv[]) {
       fprintf(file2, "%f %f %f ", row_i[0], row_i[1], row_i[2]);
     } 
     fprintf(file2, "%f %f %f\n", position[0], position[1], position[2]);
-
   }
 
   fclose(file1);
