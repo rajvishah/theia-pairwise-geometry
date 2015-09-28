@@ -1,6 +1,6 @@
 CC=g++ 
-#CFLAGS=-O3 -w -c -std=c++11 -fopenmp -Wall
-CFLAGS=-O0 -w -c -std=c++11 -fopenmp -Wall
+CFLAGS=-O3 -w -c -std=c++11 -fopenmp -Wall
+#CFLAGS=-O0 -w -c -g -std=c++11 -fopenmp -Wall
 
 LIBPATH=-L/usr/local/lib/ -L/usr/lib/ -L/home/rajvi/Bundler/lib/ann_1.1_char/lib/ -L../TheiaSfM-master/build/lib/
 IFLAGS=-I/usr/local/include/ -I/usr/include/ -I/home/rajvi/PhD/Projects/openMVG-master/src/third_party/eigen/ -I/home/rajvi/Bundler/lib/ann_1.1_char/include/ -I../../TheiaSfM-master/libraries/

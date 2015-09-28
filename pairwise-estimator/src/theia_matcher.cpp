@@ -26,6 +26,7 @@ int main(int argc, char* argv[]) {
   // argv[1] stores image_dims.txt, list_keys.txt, list_images.txt
   string imgListFile = argv[1];
   string keyListFile = argv[1];
+  string intrinsicFileName = string(argv[1]) + "/intrinsics.txt"; 
 
   // Read keyfile names
   // Read image file names and dimensions
@@ -38,6 +39,23 @@ int main(int argc, char* argv[]) {
   if(!s1 || !s2) {
     printf("\nError reading list file or key file");
     return 0;
+  }
+
+  // Open file that stores focal lengths and radial distortion params
+  // Find all nearby images based on ranks
+  ifstream intrFile(intrinsicFileName.c_str());
+  if(!intrFile.is_open()) {
+    cout << "\nError opening intr File";
+    return -1;
+  }
+
+  string line;
+  vector<double> precompFocals;
+  while(getline(intrFile, line)) {
+    istringstream str(line);
+    double a, b,c;
+    str >> a >> b >> c;
+    precompFocals.push_back(a);
   }
 
   // Open files to write pairwise matching output 
@@ -110,6 +128,10 @@ int main(int argc, char* argv[]) {
         calibrationFlag[i] = true;
         focalLengths[i] = cPrior.focal_length.value;
         camPriors.push_back(cPrior);
+      } else if(precompFocals[i] != 0) {
+        calibrationFlag[i] = true;
+        focalLengths[i] = precompFocals[i];
+        camPriors.push_back(cPrior); 
       } else {
         camPriors.push_back(dummyPrior);
       }
@@ -122,6 +144,7 @@ int main(int argc, char* argv[]) {
   FILE* fp = fopen( argv[2] , "r");
   if( fp == NULL ) {
     printf("\nCould not read matches file");
+    fflush(stdout);
     return 0;
   }
 
@@ -137,7 +160,6 @@ int main(int argc, char* argv[]) {
     int numMatches;
     fscanf(fp,"%d",&numMatches);
 
-    printf(": num matches %d\n", numMatches);
     fflush(stdout);
     
     for(int i=0; i < numMatches; i++) {
@@ -166,12 +188,15 @@ int main(int argc, char* argv[]) {
         camPriors[img1], camPriors[img2],
         featCorrs,&currPairInfo,&inliers);
 
-    for(int in=0; in < inliers.size(); in++) {
-      inlFeatCorrs.push_back( featCorrs[inliers[in]] ); 
-    }
-
     if(status) {
       printf("\nSuccessfully Verified Matches");
+      printf("\nFocal Length 1 = %f, Focal Length 2 = %f", camPriors[img1].focal_length.value, camPriors[img2].focal_length.value);
+      printf("\nFocal Length 1 = %f, Focal Length 2 = %f", currPairInfo.focal_length_1, currPairInfo.focal_length_2);
+
+      for(int inl_id=0; inl_id < inliers.size(); inl_id++) {
+        inlFeatCorrs.push_back( featCorrs[inliers[inl_id]] ); 
+      }
+
       ImagePairMatch imPair;
       imPair.image1_index = img1;
       imPair.image2_index = img2; 
@@ -180,7 +205,7 @@ int main(int argc, char* argv[]) {
       matches.push_back(imPair);
 
       int numInl = inliers.size();
-//      fprintf(file4, "%d\n", inliers.size());
+      //      fprintf(file4, "%d\n", inliers.size());
       for(int j=0; j < numInl; j++) {
         pair<int,int> p = matchIdxPairs[inliers[j]];
         fprintf(file4, "2 %d %d %d %d\n", img1, p.first, img2, p.second); 

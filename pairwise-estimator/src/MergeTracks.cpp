@@ -48,14 +48,14 @@ int main(int argc, char* argv[]) {
     }
 
     char results_dir[1000], output_dir[1000];
-    strcpy(results_dir, argv[2]);
-    strcpy(output_dir, argv[3]);
+    strcpy(results_dir, argv[1]);
+    strcpy(output_dir, argv[2]);
 
 
     printf("[DEBUG] Results Directory : %s\n", results_dir);
 
     char command[1000];
-    sprintf(command,"ls %s/input-tracks.txt", results_dir);
+    sprintf(command,"ls %s/input_tracks.txt", results_dir);
     FILE *fSys = popen(command, "r");
 
     char path[1000];
@@ -253,7 +253,6 @@ int main(int argc, char* argv[]) {
     fflush(stdout);
 
     FILE *ftrack = fopen(tracksPath,"w");
-    fprintf(ftrack, "%d\n", track_cnt);
     for(iter2=track.begin(); iter2!=track.end(); ++iter2) {
         vector <unsigned long long int> my_temp;
         my_temp = *iter2;
